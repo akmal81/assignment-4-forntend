@@ -1,9 +1,10 @@
+import { Button } from "@/components/ui/button";
 
 
 const TutorsPage = () => {
     return (
         <div>
-            tutor page
+        <Button>click me</Button>  
         </div>
     );
 };
