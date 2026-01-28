@@ -41,7 +41,7 @@ const Hero = ({
     },
   },
   image = {
-    src: "https://i.ibb.co.com/Y95LyVM/Frame-4.png",
+    src: "../../../public/hero.svg",
     alt: "Hero section demo image showing interface components",
   },
   className,
