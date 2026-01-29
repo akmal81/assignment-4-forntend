@@ -27,6 +27,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import { getSession } from "@/action/user.actions";
+import { useEffect, useState } from "react";
+
 
 interface MenuItem {
   title: string;
@@ -69,8 +72,8 @@ const Navbar = ({
     { title: "Home", url: "/" },
     { title: "Tutors", url: "/tutors" },
     { title: "Dashboard", url: "/dashboard" },
-    
-   
+
+
   ],
   auth = {
     login: { title: "Login", url: "/login" },
@@ -78,6 +81,19 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
+
+  const [data, setData] = useState();
+  const [error, setError] = useState<{ message: string } | null>(null)
+
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await getSession();
+      setData(data);
+      setError(error)
+    })
+  }, [])
+
+console.log(data)
   return (
     <section className={cn("py-4", className)}>
       <div className="container mx-auto">
@@ -152,12 +168,21 @@ const Navbar = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <a href={auth.login.url}>{auth.login.title}</a>
-                    </Button>
+                    {data?<>
+                      
+                      <Button>Log Out</Button>
+                    </>:
+                    
+                    <>
                     <Button asChild>
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
+                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
                     </Button>
+                    <Button asChild variant="outline">
+                      <Link href={auth.login.url}>{auth.login.title}</Link>
+                    </Button>
+
+                    </>
+                    }
                   </div>
                 </div>
               </SheetContent>
@@ -170,7 +195,7 @@ const Navbar = ({
 };
 
 const renderMenuItem = (item: MenuItem) => {
-  
+
 
   return (
     <NavigationMenuItem key={item.title}>
@@ -178,14 +203,14 @@ const renderMenuItem = (item: MenuItem) => {
         href={item.url}
         className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
       >
-       <Link href={item.url}>{item.title}</Link> 
+        <Link href={item.url}>{item.title}</Link>
       </NavigationMenuLink>
     </NavigationMenuItem>
   );
 };
 
 const renderMobileMenuItem = (item: MenuItem) => {
- 
+
 
   return (
     <Link key={item.title} href={item.url} className="text-md font-semibold">

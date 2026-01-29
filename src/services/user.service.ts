@@ -28,5 +28,14 @@ export const userService = {
         } catch (error) {
             return { data: null, error: { message: "Something went wrong" } }
         }
+    },
+
+    getUser: async function () {
+        try {
+            
+            
+        } catch (error) {
+             return { data: null, error: { message: "Something went wrong" } }
+        }
     }
 }

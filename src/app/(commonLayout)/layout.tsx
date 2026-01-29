@@ -1,3 +1,4 @@
+import { Footer2 } from "@/components/footer2";
 import { Navbar } from "@/components/layout/navbar1";
 
 
@@ -13,6 +14,7 @@ const layout = (
         <div>
             <Navbar></Navbar>
             {children}
+            <Footer2></Footer2>
         </div>
     );
 };

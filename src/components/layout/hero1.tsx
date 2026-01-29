@@ -47,16 +47,11 @@ const Hero = ({
   className,
 }: Hero1Props) => {
   return (
-    <section className={cn("py-24", className)}>
+    <section className={cn("", className)}>
       <div className="container mx-auto">
       <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
           <div className="gap-5 flex flex-col items-center text-center lg:items-start lg:text-left">
-            {badge && (
-              <Badge variant="outline">
-                {badge}
-                
-              </Badge>
-            )}
+           
             <h1 className="text-4xl font-bold text-pretty lg:text-6xl">
               {heading}
             </h1>
