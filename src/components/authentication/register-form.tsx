@@ -52,7 +52,7 @@ export function RegisterForm({
         name: "",
         email: "",
         password: "",
-        role: ""
+        role: "STUDENT"
       },
       validators: {
         onSubmit: formSchema

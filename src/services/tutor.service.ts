@@ -1,4 +1,5 @@
 import { env } from "@/env"
+import { cookies } from "next/headers";
 
 const API_URL = env.API_URL
 
@@ -11,6 +12,14 @@ interface GetTutorParams {
 interface ServiceOptions {
     cache?: RequestCache;
     revalidate?: number
+}
+
+export interface TutorData {
+    name: string,
+    bio: string,
+    image: string,
+    experience_year: number,
+    subject: string,
 }
 
 export const tutorService = {
@@ -55,5 +64,31 @@ export const tutorService = {
             return { data: null, error: { message: "Something went wrong" } }
         }
 
+    },
+
+    createTutor: async (TutorData:TutorData) => {
+        try {
+            const cookieStore = await cookies();
+            const res = await fetch(`${API_URL}/tutors`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Cookie: cookieStore.toString()
+                },
+                body: JSON.stringify(TutorData)
+            })
+
+            const data = await res.json()
+            if(data.error){
+                return {
+                    data:null,
+                    error:{message:data.error || "Error: Post not created."}
+                }
+            }
+
+            return {data:DataTransfer, error:null}
+        } catch (error) {
+            return { data: null, error: { message: "Something went wrong" } }
+        }
     }
 }

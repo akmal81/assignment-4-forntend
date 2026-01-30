@@ -13,13 +13,35 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { Roles } from "@/constants/roles"
 import { userService } from "@/services/user.service"
+import { redirect } from "next/navigation"
+import React from "react"
 
-export default async function DashboarLayout() {
+export default async function DashboarLayout({
+    admin,student, tutor
+}:{
+    admin:React.ReactNode;
+    student:React.ReactNode;
+    tutor:React.ReactNode;
+}) {
 
     const {data} = await userService.getSession()
-    console.log(data)
+    
     const userInfo = data.user
+
+  if (!data?.user) redirect("/login");
+
+  const role = data.user.role;
+
+  let content: React.ReactNode = null;
+
+  if (role === Roles.admin) content = admin;
+  else if (role === Roles.tutor) content = tutor;
+  else if (role === Roles.student) content = student;
+  else redirect("/login");
+
+
     return (
         <SidebarProvider>
             <AppSidebar  user={userInfo} />
@@ -44,14 +66,7 @@ export default async function DashboarLayout() {
                         </BreadcrumbList>
                     </Breadcrumb>
                 </header>
-                <div className="flex flex-1 flex-col gap-4 p-4">
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                        <div className="bg-muted/50 aspect-video rounded-xl" />
-                        <div className="bg-muted/50 aspect-video rounded-xl" />
-                        <div className="bg-muted/50 aspect-video rounded-xl" />
-                    </div>
-                    <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
-                </div>
+              <main>{content}</main>
             </SidebarInset>
         </SidebarProvider>
     )

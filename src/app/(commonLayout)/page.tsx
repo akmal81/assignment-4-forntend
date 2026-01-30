@@ -12,8 +12,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { ArrowBigLeft, ArrowBigRight, TicketCheck } from "lucide-react";
-import { Happy_Monkey } from "next/font/google";
+import { ArrowBigRight, TicketCheck } from "lucide-react";
+
 
 
 
@@ -21,12 +21,12 @@ export default async function Home() {
 
   const { data } = await tutorService.getTutor(
     {
-      isFeatured: true
+      // isFeatured: true
     },
     { cache: "no-store" }
-  )
+  );
 
-
+  console.log({ data })
 
   return (
     <>

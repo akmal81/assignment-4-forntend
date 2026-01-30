@@ -57,7 +57,7 @@ export function AppSidebar(
  let routes:Route[] = []
 
 switch(user.role){
-case Roles.admmin: routes = adminRoutes;
+case Roles.admin: routes = adminRoutes;
 break;
 case Roles.student: routes= studentRoutes;
 break;

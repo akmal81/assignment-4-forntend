@@ -19,6 +19,7 @@ import { useForm } from "@tanstack/react-form"
 import * as z from "zod"
 import { authClient } from "@/lib/auth-client"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object(
     {
@@ -35,6 +36,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
 
+  const router = useRouter()
   const form = useForm(
     {
       defaultValues: {
@@ -48,7 +50,7 @@ export function LoginForm({
       },
       onSubmit: async ({value}) => {
 
-       const toastId= toast.loading("Creating User")
+       const toastId= toast.loading("Login....")
 
         try {
           
@@ -59,8 +61,8 @@ export function LoginForm({
             return
           }
 
-          toast.success("User Created Successfully", {id:toastId})
-
+          toast.success("Login Successfully", {id:toastId})
+          router.replace('/')
 
         } catch (error) {
           toast.error("Something went wrong, please try again later", {id:toastId})

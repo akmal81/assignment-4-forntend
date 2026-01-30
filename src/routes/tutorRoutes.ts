@@ -6,8 +6,8 @@ export const tutorRoutes:Route[] = [
 
         items: [
             {
-                title: "Analytics",
-                url: "/analytics",
+                title: "Profile",
+                url: "/tutor/dashboard/profile",
             },
             
         ],

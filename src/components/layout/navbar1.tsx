@@ -29,6 +29,8 @@ import {
 import Link from "next/link";
 import { getSession } from "@/action/user.actions";
 import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 
 interface MenuItem {
@@ -83,17 +85,36 @@ const Navbar = ({
 }: Navbar1Props) => {
 
   const [data, setData] = useState();
-  const [error, setError] = useState<{ message: string } | null>(null)
+  const [loading, setLoading] = useState(true);
+  const router = useRouter()
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await getSession();
-      setData(data);
-      setError(error)
-    })
+      try {
+        
+        const { data } = await getSession();
+        setData(data);
+      } catch (error) {
+        
+        
+      }
+      finally{
+setLoading(false)
+      }
+    })()
   }, [])
 
-console.log(data)
+
+const handleSignOut = async () => {
+    try {
+      await authClient.signOut(); 
+      router.replace('/login')
+
+    } catch (err) {
+      console.error("Sign out error:", err);
+    }
+  };
+
   return (
     <section className={cn("py-4", className)}>
       <div className="container mx-auto">
@@ -120,12 +141,28 @@ console.log(data)
             </div>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <a href={auth.login.url}>{auth.login.title}</a>
-            </Button>
-            <Button asChild size="sm">
-              <a href={auth.signup.url}>{auth.signup.title}</a>
-            </Button>
+            
+               { data  ?<>
+                      <div className="flex gap-2 justify-center items-center">
+                        <span></span>
+                      <Button variant="outline" onClick={handleSignOut}>Log Out</Button>
+
+                      </div>
+               </>
+                     :
+
+                      <>
+                        <Button asChild>
+                          <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                        </Button>
+                        <Button asChild variant="outline">
+                          <Link href={auth.login.url}>{auth.login.title}</Link>
+                        </Button>
+
+                      </>
+                    
+            }
+           
           </div>
         </nav>
 
@@ -168,20 +205,20 @@ console.log(data)
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    {data?<>
-                      
-                      <Button>Log Out</Button>
-                    </>:
-                    
-                    <>
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
-                    <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
+                    { data  ?(
 
-                    </>
+                      <Button>Log Out</Button>
+                     ) :
+
+                      <>
+                        <Button asChild>
+                          <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                        </Button>
+                        <Button asChild variant="outline">
+                          <Link href={auth.login.url}>{auth.login.title}</Link>
+                        </Button>
+
+                      </>
                     }
                   </div>
                 </div>

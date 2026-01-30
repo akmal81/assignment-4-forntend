@@ -1,10 +1,7 @@
+import { redirect } from "next/navigation";
 
 
 export default function TutorDashboard() {
-    return (
-        <div>
-            TutorDashboard
-        </div>
-    );
+    redirect("/tutor/dashboard/profile")
 }
 
