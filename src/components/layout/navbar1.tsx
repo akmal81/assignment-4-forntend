@@ -91,23 +91,23 @@ const Navbar = ({
   useEffect(() => {
     (async () => {
       try {
-        
+
         const { data } = await getSession();
         setData(data);
       } catch (error) {
-        
-        
+
+
       }
-      finally{
-setLoading(false)
+      finally {
+        setLoading(false)
       }
     })()
   }, [])
 
 
-const handleSignOut = async () => {
+  const handleSignOut = async () => {
     try {
-      await authClient.signOut(); 
+      await authClient.signOut();
       router.replace('/login')
 
     } catch (err) {
@@ -141,28 +141,28 @@ const handleSignOut = async () => {
             </div>
           </div>
           <div className="flex gap-2">
-            
-               { data  ?<>
-                      <div className="flex gap-2 justify-center items-center">
-                        <span></span>
-                      <Button variant="outline" onClick={handleSignOut}>Log Out</Button>
 
-                      </div>
-               </>
-                     :
+            {data ? <>
+              <div className="flex gap-2 justify-center items-center">
+                <span></span>
+                <Button variant="outline" onClick={handleSignOut}>Log Out</Button>
 
-                      <>
-                        <Button asChild>
-                          <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                        </Button>
-                        <Button asChild variant="outline">
-                          <Link href={auth.login.url}>{auth.login.title}</Link>
-                        </Button>
+              </div>
+            </>
+              :
 
-                      </>
-                    
+              <>
+                <Button asChild>
+                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href={auth.login.url}>{auth.login.title}</Link>
+                </Button>
+
+              </>
+
             }
-           
+
           </div>
         </nav>
 
@@ -205,10 +205,22 @@ const handleSignOut = async () => {
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    { data  ?(
+                    {data ? (
 
-                      <Button>Log Out</Button>
-                     ) :
+                      <Button
+
+                        onClick={async () => {
+                          await authClient.signOut({
+                            fetchOptions: {
+                              onSuccess: () => {
+                                router.push("/login"); // redirect to login page
+                              },
+                            }
+                          });
+                        }}
+
+                      >Log Out</Button>
+                    ) :
 
                       <>
                         <Button asChild>

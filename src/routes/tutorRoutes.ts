@@ -9,6 +9,10 @@ export const tutorRoutes:Route[] = [
                 title: "Profile",
                 url: "/tutor/dashboard/profile",
             },
+            {
+                title: "Add Availablity",
+                url: "/tutor/dashboard/availablity",
+            },
             
         ],
     }

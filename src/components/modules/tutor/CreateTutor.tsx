@@ -41,6 +41,7 @@ export const tutorSchema = z.object({
         .max(1000, "Bio must be less than 1000 characters"),
 
     image: z.string().url().or(z.literal("")),
+    hourly_rate: z.number(),
 
     experience_year: z
         .number()
@@ -59,9 +60,8 @@ export const tutorSchema = z.object({
 
 
 
-export default function TutorProfile({tutor}:{tutor:Tutor}) {
+export default function CreateTutor({tutor}:{tutor:Tutor}) {
 
-console.log(tutor)
 
     const [categorydata, setCategorydata] = useState<Category[]>([]);
     const [error, setError] = useState<{ message: string } | null>(null); //use state type define
@@ -88,6 +88,7 @@ console.log(tutor)
                 bio: "",
                 image: "",
                 experience_year: 0,
+                hourly_rate:0,
                 subject: "",
                 categoryId: "",
             },
@@ -149,7 +150,7 @@ console.log(tutor)
                                             type="text"
                                             id={field.name}
                                             name={field.name}
-                                            value={field.state.value ?? ""}
+                                            value={field.state.value}
                                             onChange={(e) => field.handleChange(e.target.value)}
                                             placeholder="Full name"
                                             
@@ -216,6 +217,28 @@ console.log(tutor)
                                 return (
                                     <Field data-invalid={isInvalid}>
                                         <FieldLabel htmlFor={field.name}>Year of Experience</FieldLabel>
+                                        <Input
+                                            type="number"
+                                            id={field.name}
+                                            name={field.name}
+                                            value={field.state.value ?? 0}
+                                            onChange={(e) => field.handleChange(Number(e.target.value))}
+                                            placeholder="Your Image"
+                                        />
+                                        {isInvalid && (
+                                            <FieldError errors={field.state.meta.errors} />
+                                        )}
+                                    </Field>
+                                )
+                            }}
+                        />
+                        <form.Field
+                            name="hourly_rate"
+                            children={(field) => {
+                                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                                return (
+                                    <Field data-invalid={isInvalid}>
+                                        <FieldLabel htmlFor={field.name}>Hourly Rate</FieldLabel>
                                         <Input
                                             type="number"
                                             id={field.name}

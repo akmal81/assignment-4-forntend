@@ -10,7 +10,6 @@ export interface Tutor {
     isFeatured?: boolean
     category:{
         name:string
-        
     }
     
 }

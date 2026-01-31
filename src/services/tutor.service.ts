@@ -1,4 +1,5 @@
 import { env } from "@/env"
+import { AddTimeData } from "@/types";
 import { cookies } from "next/headers";
 
 const API_URL = env.API_URL
@@ -100,5 +101,36 @@ export const tutorService = {
         } catch (error) {
             return { data: null, error: { message: "Something went wrong" } }
         }
-    }
+    },
+
+
+
+    addTimeSlot: async (addTimeData:AddTimeData) => {
+        try {
+            const cookieStore = await cookies();
+            const res = await fetch(`${API_URL}/set-time-slot`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Cookie: cookieStore.toString()
+                },
+                body: JSON.stringify(addTimeData)
+            })
+
+            const data = await res.json()
+            if(data.error){
+                return {
+                    data:null,
+                    error:{message:data.error || "Error: Time slot add fail."}
+                }
+            }
+
+            return {data:data, error:null}
+        } catch (error) {
+            return { data: null, error: { message: "Something went wrong" } }
+        }
+    },
+
+
+    
 }
