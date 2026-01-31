@@ -6,7 +6,11 @@ const API_URL = env.API_URL
 
 interface GetTutorParams {
     isFeatured?: boolean;
+    id?:string
     search?: string;
+    userId?:string;
+    rating?:number;
+    price?:number
 }
 
 interface ServiceOptions {
@@ -20,6 +24,10 @@ export interface TutorData {
     image: string,
     experience_year: number,
     subject: string,
+}
+
+export interface UserId{
+    userId:string
 }
 
 export const tutorService = {
@@ -66,6 +74,8 @@ export const tutorService = {
 
     },
 
+   
+
     createTutor: async (TutorData:TutorData) => {
         try {
             const cookieStore = await cookies();
@@ -86,7 +96,7 @@ export const tutorService = {
                 }
             }
 
-            return {data:DataTransfer, error:null}
+            return {data:data, error:null}
         } catch (error) {
             return { data: null, error: { message: "Something went wrong" } }
         }

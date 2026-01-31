@@ -1,5 +1,6 @@
 export interface Tutor {
     id: string |number
+    name:string
     bio: string
     image?: string | null
     hourly_rate: number
@@ -9,8 +10,7 @@ export interface Tutor {
     isFeatured?: boolean
     category:{
         name:string
+        
     }
-    user:{
-        name:string
-    }
+    
 }

@@ -23,10 +23,10 @@ const TutorCard = ({ tutors }: { tutors: Tutor }) => {
             <Card className="h-full overflow-hidden border-none shadow-md transition-all duration-300 pb-2">
                 <div className="relative h-56 w-full overflow-hidden">
                     {tutors.image ? (
-                        <Image
+                        <img
                             src={tutors.image}
                             alt="Tutor"
-                            fill
+                            // fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                     )
@@ -39,7 +39,7 @@ const TutorCard = ({ tutors }: { tutors: Tutor }) => {
                 <CardHeader className="pb-2">
                     <CardTitle className="line-clamp-2 text-xl font-bold transition-colors group-hover:text-primary">
                         <p>
-                            {tutors.user.name}
+                            {tutors.name}
                         </p>
                         <div className="flex flex-row gap-2 text-sm mt-2">
                             <span>

@@ -1,6 +1,7 @@
 
 
 "use client"
+import { getCategory } from "@/action/category.action";
 import { createTutor } from "@/action/tutor.actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,10 +9,24 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "@tanstack/react-form";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 import { toast } from "sonner";
 
 import * as z from "zod"
+import { useEffect, useState } from "react";
+import { Tutor } from "@/types";
+
+type Category = {
+    id: string
+    name: string
+}
 
 
 export const tutorSchema = z.object({
@@ -38,10 +53,33 @@ export const tutorSchema = z.object({
         .min(2, "Subject must be at least 2 characters")
         .max(100, "Subject must be less than 100 characters"),
 
+    categoryId: z.string()
+
 });
 
 
-export default function TutorProfile() {
+
+export default function TutorProfile({tutor}:{tutor:Tutor}) {
+
+console.log(tutor)
+
+    const [categorydata, setCategorydata] = useState<Category[]>([]);
+    const [error, setError] = useState<{ message: string } | null>(null); //use state type define
+    // console.log(data);
+    // useEffect(()=>{(async()=>{})()}, []);
+    useEffect(() => {
+        (async () => {
+            const { data } = await getCategory();
+            setCategorydata(data);
+            setError(error)
+
+        })()
+    }, []);
+
+    if (!categorydata) {
+        return
+    }
+
 
     const form = useForm(
         {
@@ -51,17 +89,21 @@ export default function TutorProfile() {
                 image: "",
                 experience_year: 0,
                 subject: "",
+                categoryId: "",
             },
             validators: {
                 onSubmit: tutorSchema
             },
             onSubmit: async ({ value }) => {
 
+
                 const toastId = toast.loading("Creating...");
                 const tutorData = {
                     ...value,
+                    categoryId: Number(value.categoryId),
+
                 }
-                console.log(tutorData)
+                // console.log(tutorData)
 
                 try {
 
@@ -110,6 +152,7 @@ export default function TutorProfile() {
                                             value={field.state.value ?? ""}
                                             onChange={(e) => field.handleChange(e.target.value)}
                                             placeholder="Full name"
+                                            
                                         />
                                         {isInvalid && (
                                             <FieldError errors={field.state.meta.errors} />
@@ -212,6 +255,42 @@ export default function TutorProfile() {
                             }}
                         />
 
+
+
+                        <form.Field
+                            name="categoryId"
+                            children={(field) => {
+                                const isInvalid =
+                                    field.state.meta.isTouched && !field.state.meta.isValid
+
+                                return (
+                                    <Field data-invalid={isInvalid}>
+                                        <FieldLabel htmlFor={field.name}>Category</FieldLabel>
+
+                                        <Select
+                                            value={field.state.value ?? ""}
+                                            onValueChange={(value) => field.handleChange(value)}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a category" />
+                                            </SelectTrigger>
+
+                                            <SelectContent>
+                                                {categorydata?.map((cat) => (
+                                                    <SelectItem key={cat.id} value={String(cat.id)}>
+                                                        {cat.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+
+                                        {isInvalid && (
+                                            <FieldError errors={field.state.meta.errors} />
+                                        )}
+                                    </Field>
+                                )
+                            }}
+                        />
 
 
 

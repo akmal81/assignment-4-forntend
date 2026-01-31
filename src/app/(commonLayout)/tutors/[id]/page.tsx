@@ -20,7 +20,7 @@ export default async function SingleTutor(
 ) {
     const {id} = await params
     const {data} = await tutorService.getTutorById(id)
-    console.log(data)
+  
     return (
         <div>
             <ProductDetail1 data={data}></ProductDetail1>
