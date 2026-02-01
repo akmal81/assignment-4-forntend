@@ -1,6 +1,6 @@
 export interface Tutor {
-    id: string |number
-    name:string
+    id: string 
+    name: string
     bio: string
     image?: string | null
     hourly_rate: number
@@ -8,8 +8,17 @@ export interface Tutor {
     average_rating: number
     subject: string
     isFeatured?: boolean
-    category:{
-        name:string
+    category: {
+        name: string
     }
-    
+    availabilitySlots: [
+        {
+            id:string
+            date: Date
+            startTime: Date
+            endTime: Date
+            isBooked: Boolean
+        }
+    ]
+
 }

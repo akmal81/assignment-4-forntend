@@ -19,6 +19,8 @@ import { ArrowBigRight, TicketCheck } from "lucide-react";
 
 export default async function Home() {
 
+  
+
   const { data } = await tutorService.getTutor(
     {
       // isFeatured: true

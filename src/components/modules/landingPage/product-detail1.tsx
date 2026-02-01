@@ -1,6 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleCheck, Star, StarHalf } from "lucide-react";
+import { Calendar, Loader2, Star, StarHalf } from "lucide-react";
+import { CircleCheck } from "lucide-react";
+import { Clock } from "lucide-react";
 import { ControllerRenderProps, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -24,7 +26,13 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Tutor } from "@/types";
+import { BookingData, Tutor } from "@/types";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { getSession } from "@/action/user.actions";
+import { createBooking } from "@/action/Booking.action";
+import { toast } from "sonner";
 
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
@@ -203,9 +211,63 @@ const PRODUCT_DETAILS = {
 
 interface ProductDetail1Props {
   className?: string;
+
 }
 
-const ProductDetail1 = ({ data, className }: { data: Tutor, className?: ProductDetail1Props }) => {
+
+
+const ProductDetail1 = ({ data, className, }: { data: Tutor, className?: ProductDetail1Props }) => {
+
+
+
+  const [session, setSession] = useState<any>(null);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await getSession();
+        setSession(res.data);
+      } catch (error) {
+        console.error("Session fetch failed", error);
+      }
+    })();
+  }, []);
+
+
+
+  const handleBooking = async (slotId: string) => {
+    if (!session) {
+      toast.error("Please login to book a slot");
+      return;
+    }
+
+    const bookingData: BookingData = {
+      studentId: session.user.id,
+      slotId: slotId,
+      tutorProfilesId: data.id,
+    };
+
+    
+      try {
+        const res = await createBooking(bookingData);
+        if (res?.error) {
+          toast.error(res.error.message);
+        } else {
+          toast.success("Booking Successful");
+          router.refresh();
+        }
+      } catch (error) {
+        toast.error("Something went wrong during booking");
+      }
+   
+  };
+
+
+
   return (
     <section className={cn("py-32", className)}>
       <div className="container mx-auto">
@@ -244,9 +306,68 @@ const ProductDetail1 = ({ data, className }: { data: Tutor, className?: ProductD
               </p>
             </div>
 
-            <Button size="lg" className="w-full">
-              Book Now
-            </Button>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              {data.availabilitySlots.map((slot, index) => (
+
+                <Card key={index} className="overflow-hidden border-l-4 border-orange-400 hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-2">
+
+                        <div className="flex items-center text-sm font-medium text-muted-foreground">
+                          <Calendar className="mr-2 h-4 w-4 text-orange-400" />
+                          {new Date(slot.date).toLocaleDateString('en-GB', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric'
+                          })}
+                        </div>
+
+
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center bg-secondary px-3 py-1 rounded-md">
+                            <Clock className="mr-2 h-4 w-4 text-orange-400" />
+                            <span className="text-sm font-semibold">
+                              {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {" - "}
+                              {new Date(slot.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+
+                    {
+                      slot.isBooked ?
+                        <Button disabled variant="secondary" className="cursor-not-allowed">
+                          Already Booked
+                        </Button> :
+                        <Button
+                          onClick={()=>handleBooking(slot.id)}
+                          disabled={isPending}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          {isPending ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Processing...
+                            </>
+                          ) : (
+                            "Book Now"
+                          )}
+                        </Button>
+                    }
+
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+
+
           </div>
         </div>
       </div>
