@@ -28,7 +28,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { BookingData, Tutor } from "@/types";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { getSession } from "@/action/user.actions";
 import { createBooking } from "@/action/Booking.action";
@@ -258,8 +258,9 @@ const ProductDetail1 = ({ data, className, }: { data: Tutor, className?: Product
           toast.error(res.error.message);
         } else {
           toast.success("Booking Successful");
-          router.refresh();
+          router.replace('/dashboard/mySession');
         }
+        
       } catch (error) {
         toast.error("Something went wrong during booking");
       }
@@ -349,7 +350,7 @@ const ProductDetail1 = ({ data, className, }: { data: Tutor, className?: Product
                         <Button
                           onClick={()=>handleBooking(slot.id)}
                           disabled={isPending}
-                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                          className="text-white bg-orange-400"
                         >
                           {isPending ? (
                             <>

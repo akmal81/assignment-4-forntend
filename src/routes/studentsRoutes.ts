@@ -7,8 +7,8 @@ export const studentRoutes:Route[] = [
 
         items: [
             {
-                title: "Analytics",
-                url: "/analytics",
+                title: "My Session",
+                url: "/dashboard/mySession",
             },
             
         ],

@@ -15,13 +15,13 @@ export default async function CreateTutorProfile() {
     //  console.log(tutor)
     return (
         <div>
-            {tutor && tutor?
+            {/* {tutor && tutor?
             
             <TutorProfile tutor={tutor}></TutorProfile>
             :
         
-            <CreateTutor tutor={tutor}></CreateTutor>
-        }
+        } */}
+        <CreateTutor tutor={tutor}></CreateTutor>
 
         </div>
     )

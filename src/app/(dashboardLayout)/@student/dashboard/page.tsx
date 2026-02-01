@@ -1,11 +1,10 @@
+import { redirect } from "next/navigation";
+
 
 
 const StudentPage = () => {
-    return (
-        <div>
-            <h1>This is student page</h1>
-        </div>
-    );
+    redirect("/dashboard/mySession")
+
 };
 
 export default StudentPage;

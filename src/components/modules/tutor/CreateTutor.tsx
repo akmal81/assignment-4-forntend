@@ -277,9 +277,6 @@ export default function CreateTutor({tutor}:{tutor:Tutor}) {
                                 )
                             }}
                         />
-
-
-
                         <form.Field
                             name="categoryId"
                             children={(field) => {
@@ -314,12 +311,7 @@ export default function CreateTutor({tutor}:{tutor:Tutor}) {
                                 )
                             }}
                         />
-
-
-
                     </FieldGroup>
-
-
                 </form>
             </CardContent>
             <CardFooter className="">
